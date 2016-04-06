@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>LKP Server</title>
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/ui-lightness/jquery-ui-1.10.4.custom.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/defaultTheme.css" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/myTheme.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/customer.css" />
+    
+    <script type="text/javascript"  src='/static/lib/js/jquery-1.9.1.min.js'></script>
+    <script type="text/javascript" src='/static/lib/js/jquery-ui-1.10.4.custom.min.js'></script>
+    <script type="text/javascript"  src='/static/lib/js/bootstrap.min.js'></script>
+    <script type="text/javascript"  src='/static/lib/js/fixedheadertable.js'></script>
+    <script type="text/javascript"  src='/static/js/devicereleaseview.js'></script>
+</head>
+<body style="background-color:#E5E5E5">
+<div class="navbar navbar-default navbar-fixed-top" style="width:100%;background-color:#778899;background-image:none;">
+    <div class="row" style="width:100%; text-align:center; font-size:20pt; color:white;margin-bottom:15px;">
+        PnP KPI Regression Control Report &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--- KPI Viewpoint: ECS 7A
+    </div>
+    <div class="row" style="margin-left:5px;margin-bottom:5px;">
+        <div class="col-lg-1" style="color:white;font-size:12pt; text-align:right;">Platform:</div>
+        <div class="col-lg-5" style="font-size:12pt; text-align:left;">
+            <select id="platform" style="width:120px;" onchange="ChangePlatform(this)"></select>
+        </div>
+        <div class="col-lg-2" style="color:white;font-size:12pt; text-align:right;">Release Type:</div>
+        <div class="col-lg-1" style="font-size:12pt; text-align:left;">
+            <select id="releasetype" style="width:120px;" onchange="ChangeReleaseType(this)"></select>
+        </div>
+        <div class="col-lg-2" style="color:white;font-size:12pt; text-align:right;">
+            <input id="cbRegression" type="checkbox" onclick="ShowRegression(this)"/>
+            <label for="cbRegression" >Only Show Regression</label>
+        </div>
+    </div>
+    <div class="row" style="margin-left:5px;margin-bottom:5px;">
+        <div class="col-lg-1" style="color:white;font-size:12pt; text-align:right;">Device:</div>
+        <div id="device" class="col-lg-6" style="text-align:left; font-size:10pt; color:white;" >
+            
+        </div>
+        <div class="col-lg-1" style="color:white;font-size:12pt; text-align:right;">Start:</div>
+        <div class="col-lg-1" style="text-align:left; font-size:12pt;">
+            <select id="release_s" style="width:120px;" onchange="ChangeStartRelease(this)"></select>
+        </div>
+        <div class="col-lg-1" style="color:white;font-size:12pt; text-align:right;">End:</div>
+        <div class="col-lg-1" style="text-align:left; font-size:12pt;">
+            <select id="release_e" style="width:120px;" onchange="ChangeEndRelease(this)"></select>
+        </div>  
+    </div>
+</div>
+<div id="div_content" style="margin-left:2px;margin-top:120px;background-color:#F0FFFF;">
+    <table id="r_content" class="table table-bordered table-striped vMiddle"></table>
+</div>
+<div id="regDetail" title="Regression Detail" style="display:none">
+    <table class="table">
+        <tr><td colspan=4 style="width:200px;font-size:14pt;"><label>KPI:</label><span id="d_kpiinfo" style="margin-left:10px;font-size:12pt;"></span><hr style="FILTER: alpha(opacity=100,finishopacity=0,style=1);height:3px;width:80%;margin-top:-5px;margin-bottom:10px;" align="left" color="#987cb9" size="3"></td></tr>
+        <tr style="background-color:#ABABAB; color:white;"><td colspan=4><label>Current Release:</label><span id="curRelease" style="margin-left:10px;"></span><label style="margin-left:20px;">Mid:</label><span id="curMid" style="margin-left:10px;"></span><label style="margin-left:20px;">Avg:</label><span id="curAvg" style="margin-left:10px;"></span><label style="margin-left:20px;">Std:</label><span id="curStd" style="margin-left:10px;"></span><label style="margin-left:20px;">Times:</label><span id="curTimes" style="margin-left:10px;"></span></td></tr>
+        <!--tr><td style="width:20px;"></td><td colspan=3 style="padding:0px;">-----------------------------------------</td></tr-->
+        <tr><td style="width:20px;"></td><td>Value</td><td>Job ID</td><td colspan=6>result source</td></tr>
+        <tbody id="curValueInfo"></tbody>
+
+        <tr style="background-color:#ABABAB; color:white;"><td colspan=4><label>Pre Release:</label><span id="preRelease" style="margin-left:10px;"></span><label style="margin-left:20px;">Mid:</label><span id="preMid" style="margin-left:10px;"></span><label style="margin-left:20px;">Avg:</label><span id="preAvg" style="margin-left:10px;"></span><label style="margin-left:20px;">Std:</label><span id="preStd" style="margin-left:10px;"></span><label style="margin-left:20px;">Times:</label><span id="preTimes" style="margin-left:10px;"></span></td></tr>
+        <!--tr><td style="width:20px;"></td><td colspan=3 style="padding:0px;">-----------------------------------------</td></tr-->
+        <tr><td style="width:20px;"></td><td>Value</td><td>Job ID</td><td colspan=6>result source</td></tr>
+        <tbody id="preValueInfo"></tbody>
+
+        <tr style="background-color:#ABABAB; color:white;"><td colspan=4><label>Bisect:</label><button class="btn btn-xs" style="margin-left:200px;">start bisect</button></td></tr>
+        <!--tr><td style="width:20px;"></td><td colspan=3 style="padding:0px;">-----------------------------------------</td></tr-->
+        <tr><td style="width:20px;"></td><td>Pull request</td><td>pre-integration image</td><td colspan=2></td></tr>
+        <tr id="curValueInfo"></tr>
+        <tr><td colspan=4 style="text-align:right;"><button class="btn btn-info btn-sm" style="width:100px;margin-left:10px;" onclick="CloseDetailWindow()">Close</button></td></tr>
+    </table>
+</div>
+</body>
+</html>

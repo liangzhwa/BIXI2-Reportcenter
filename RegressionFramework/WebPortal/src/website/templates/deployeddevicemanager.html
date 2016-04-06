@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>LKP Server</title>
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/ui-lightness/jquery-ui-1.10.4.custom.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/customer.css" />
+    
+    <script type="text/javascript"  src='/static/lib/js/jquery-1.9.1.min.js'></script>
+    <script type="text/javascript" src='/static/lib/js/jquery-ui-1.10.4.custom.min.js'></script>
+    <script type="text/javascript"  src='/static/lib/js/bootstrap.min.js'></script>
+    <script type="text/javascript" src='/static/js/deployeddevicemanager.js'></script>
+</head>
+<body style="background-color:#E5E5E5">
+<div class="navbar navbar-inverse navbar-fixed-top" style="width:100%;background-color:#003D79;background-image:none;">
+    <div class="container" style="width:100%; text-align:center; font-size:20pt; color:white;">
+            PnP KPI Regression Control Report <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--- Deployed Device Manage
+    </div>
+</div>
+<div class="row" style="width:90%;margin-top:78px;margin-left:5%;background-color:#F0FFFF;">
+    <div class="col-lg-8"><p style="font-size:16pt;font-weight:bolder;margin-top:5px;">Deployed Device List</p></div>
+    <div class="col-lg-4">
+        <button class="btn btn-xl" style="margin:5px;" onclick="AddNewDeployDevice()">Add New Deploy Device</button>
+    </div>
+</div>
+<div class="row" style="width:90%;margin-left:5%;background-color:#F0FFFF;">
+    <hr style="background-image:-webkit-linear-gradient(45deg,#8ca9cf,#F0FFFF);height:3px;width:20%;margin-top:-2px;margin-bottom:10px;" align="left" color="#987cb9" size="3">
+</div>
+<div class="row" style="width:90%;margin-left:5%;background-color:#F0FFFF;">
+    <table class="table"><tr><th>Device</th><th>PnP Role</th><th>IP</th><th>SN</th><th>BB Cody</th><th>Site</th><th>Room</th><th></th></tr><tbody id="deployeddevicelist"></tbody></table>
+</div>
+<div id="newdeploydevice" title="Add New Deploy Device"  style="display:none;" class="ui-widget ui-widget-content ui-corner-all">
+    <table class="table">
+        <tr><td style="width:100px;text-align:right;">Device</td><td colspan=3><select id="d_sltDevice" style="width:250px;height:26px;"></select></td></tr>
+        <tr><td style="text-align:right;">PnP Role</td><td colspan=3><select id="d_sltPnpRole" style="width:250px;height:26px;"></select></td></tr>
+        <tr><td style="text-align:right;">IP</td><td><input id="d_ip"  style="width:250px;"/></td></tr>
+        <tr><td style="text-align:right;">SN</td><td><input id="d_sn"  style="width:250px;"/></td></tr>
+        <tr><td style="text-align:right;">BB Code</td><td><input id="d_bbcode"  style="width:250px;"/></td></tr>
+        <tr><td style="text-align:right;">Site</td><td><input id="d_site"  style="width:250px;"/></td></tr>
+        <tr><td style="text-align:right;">Room</td><td><input id="d_room"  style="width:250px;"/></td></tr>
+        <!--tr><td style="text-align:right;">remark</td><td><textarea id="d_remark"></textarea></td></tr-->
+        <tr class="submit-row">
+            <td colspan=2 style="text-align:right;"><button class="btn btn-info btn-xs" style="width:60px;" onclick="SaveDeployDevice()">Save</button><button class="btn btn-info btn-xs" style="width:60px;margin-left:10px;" onclick="CloseDeployDeviceWindow()">Cancel</button></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

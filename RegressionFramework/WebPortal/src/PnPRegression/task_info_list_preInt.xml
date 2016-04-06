@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?><xml>
+<task id='1' test_set='power-speaker'>
+    <device name='TREKSTOR'>pnp-irda18.sh.intel.com:0AA6F3A0</device>
+    <KPI>Power#Camera#Video_Recording_1080p30</KPI>
+    <KPI>UX_experience#Response_time#Cold_Boot_Time_to_home_screen</KPI>
+</task>
+<task id='2' test_set='power-headset'>
+    <device name='TREKSTOR'>pnp-build41.sh.intel.com:0994F8A0</device>
+    <KPI>Power#Audio#Local_MP3_Playback_via_wired_headset</KPI>
+</task>
+<task id='3' test_set='performance'>
+    <device name='TREKSTOR'>build22.sh.intel.com:8E2E0143</device>
+    <KPI>UX_experience#Response_time#Contacts_Application_Launch_Time</KPI>
+    <KPI>UX_experience#Response_time#Settings_Application_Launch_Time</KPI>
+</task>
+<task id='5' test_set='performance'>
+    <device name='ECS210A'>pnp-build40.sh.intel.com:04BC3802</device>
+    <KPI>UX_experience#Response_time#Contacts_Application_Launch_Time</KPI>
+    <KPI>UX_experience#Response_time#Settings_Application_Launch_Time</KPI>
+</task>
+</xml>

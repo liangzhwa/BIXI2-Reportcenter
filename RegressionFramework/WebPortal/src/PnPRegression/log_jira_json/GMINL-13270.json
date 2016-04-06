@@ -1,0 +1,60 @@
+
+
+
+
+
+
+
+
+<html>
+
+<head>
+    <title>Unauthorized (401)</title>
+    
+
+
+<!--[if IE]><![endif]-->
+<script type="text/javascript">var contextPath = '';</script>
+<script>
+window.WRM=window.WRM||{};window.WRM._unparsedData=window.WRM._unparsedData||{};
+WRM._unparsedData["com.atlassian.jira.ext.calendar:tipDataProvider.tip"]="{\"suppressTip\":false}";
+WRM._unparsedData["com.atlassian.plugins.atlassian-plugins-webresource-plugin:context-path.context-path"]="\"\"";
+WRM._unparsedData["com.atlassian.plugins.jira-html5-attach-images:jira-html5-attach-images-resources.resource-uris"]="{\"deployJava.html\":\"/s/en_UScxs20v/6346/8/1.5.20/_/download/resources/com.atlassian.plugins.jira-html5-attach-images:jira-html5-attach-images-resources/deployJava.html\",\"clipboard.jar\":\"/s/en_UScxs20v/6346/8/1.5.20/_/download/resources/com.atlassian.plugins.jira-html5-attach-images:jira-html5-attach-images-resources/clipboard.jar\",\"clipboard-legacy.jar\":\"/s/en_UScxs20v/6346/8/1.5.20/_/download/resources/com.atlassian.plugins.jira-html5-attach-images:jira-html5-attach-images-resources/clipboard-legacy.jar\"}";
+WRM._unparsedData["com.atlassian.jira.plugins.jira-dnd-attachment-plugin:drag-and-drop-attachment-javascript.upload-limit"]="\"52428800\"";
+</script>
+<link type="text/css" rel="stylesheet" href="/s/c9f0f895fb98ab9159f51fd0297e236d-CDN/en_UScxs20v/6346/8/153/_/download/superbatch/css/batch.css" media="all">
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e-CDN/en_UScxs20v/6346/8/153/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e-CDN/en_UScxs20v/6346/8/c82f02fa23c153ad6e30e26045ef8f34/_/download/contextbatch/css/atl.general/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e-CDN/en_UScxs20v/6346/8/7e29bd8701fea6f987367d5eff8ab4a6/_/download/contextbatch/css/jira.general/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/c9f0f895fb98ab9159f51fd0297e236d-CDN/en_UScxs20v/6346/8/960cd3bf4513db6c9ddde04fbc3e6f86/_/download/contextbatch/css/jira.global/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e-T/en_UScxs20v/6346/8/6.0.6/_/download/batch/com.metainf.jira.plugin.emailissue:emailissue-web-resource6/com.metainf.jira.plugin.emailissue:emailissue-web-resource6.css" media="all">
+<script type="text/javascript" src="/s/6a13f0c0f5c7b48f7194a7d66a9cce30-CDN/en_UScxs20v/6346/8/153/_/download/superbatch/js/batch.js?locale=en-US" ></script>
+<script type="text/javascript" src="/s/679ee3031f8fbe62006d700624a8904e-CDN/en_UScxs20v/6346/8/c82f02fa23c153ad6e30e26045ef8f34/_/download/contextbatch/js/atl.general/batch.js?locale=en-US" ></script>
+<script type="text/javascript" src="/s/f21e0c9565fa3f1dd3bf0104c0ee7f3b-CDN/en_UScxs20v/6346/8/7e29bd8701fea6f987367d5eff8ab4a6/_/download/contextbatch/js/jira.general/batch.js?locale=en-US" ></script>
+<script type="text/javascript" src="/s/1febebac409a08eb8f21ee565beb8aae-CDN/en_UScxs20v/6346/8/960cd3bf4513db6c9ddde04fbc3e6f86/_/download/contextbatch/js/jira.global/batch.js?locale=en-US" ></script>
+<script type="text/javascript" src="/s/f21e0c9565fa3f1dd3bf0104c0ee7f3b-T/en_UScxs20v/6346/8/1.5/_/download/batch/com.atlassian.administration.atlassian-admin-quicksearch-jira:admin-quicksearch-webresources/com.atlassian.administration.atlassian-admin-quicksearch-jira:admin-quicksearch-webresources.js?locale=en-US" ></script>
+<script type="text/javascript" src="/s/f21e0c9565fa3f1dd3bf0104c0ee7f3b-T/en_UScxs20v/6346/8/6.0.6/_/download/batch/com.metainf.jira.plugin.emailissue:emailissue-web-resource6/com.metainf.jira.plugin.emailissue:emailissue-web-resource6.js?content-type=text%2Fjavascript&amp;locale=en-US" ></script>
+
+<script type="text/javascript" src="/rest/api/1.0/shortcuts/6346/5971ebdd14fef0253869556e8e6bc929/shortcuts.js"></script>
+
+
+    <meta name="application-name" content="JIRA" data-name="jira" data-version="6.3.15">
+</head>
+<body id="jira" class="aui-layout aui-style-default page-type-message"  data-version="6.3.15" >
+    <div class="aui-page-panel"><div class="aui-page-panel-inner">
+            <section class="aui-page-panel-content">
+                    <header class="aui-page-header"><div class="aui-page-header-inner">
+                            <div class="aui-page-header-main">
+                                    <h1>Unauthorized (401)</h1>
+                                </div><!-- .aui-page-header-main -->
+                        </div><!-- .aui-page-header-inner --></header><!-- .aui-page-header -->
+                    <div class="aui-message aui-message-warning warning">
+                            <p>Encountered a <code>&quot;401 - Unauthorized&quot;</code> error while loading this page.</p>
+                            <p><a href="/secure/MyJiraHome.jspa">Go to JIRA home</a></p>
+                        <span class="aui-icon icon-warning"></span></div>
+                </section><!-- .aui-page-panel-content -->
+        </div><!-- .aui-page-panel-inner --></div><!-- .aui-page-panel -->
+</body>
+</html>

@@ -1,0 +1,2 @@
+/home/liangzw/work/Metrix/metrix-main/RegressionFramework/WebPortal/src/website/templates/static/preInt_build/
+http://10.239.93.157:9900/static/preInt_build

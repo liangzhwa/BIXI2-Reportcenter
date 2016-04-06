@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?><xml>
+    <!-->Mapping to [DEVICE] secion in CATS recipe<-->
+    <Device>
+        <ip>pnp-irda18.sh.intel.com</ip>
+	<serial>0AA6F3A0</serial>
+	<product>cohol-power-pnp</product>
+    </Device>
+    <Options>
+        <email>pnp@pnp.sh.intel.com;qianx.a.chen@intel.com;xiaoye.sun@intel.com;guoxian.lou@intel.com;zhaowangx.liang@intel.com</email>
+        <receiver>qianx.a.chen@intel.com;yu.ma@intel.com</receiver>
+        <!--conditional_exit>Image_Flash</conditional_exit-->
+        <env/>
+        <executor>def_executor</executor>
+        <case_path>/home/pnp/pnp_auto_power</case_path>
+        <retrieve_log_path>/home/cats/t100/\$DUT_IP</retrieve_log_path>
+        <image_uri>http://10.239.93.54:8080/GMIN/factory/gminL100580/L100580_TREKSTOR/coho-flashfiles-TREKSTOR-L100580.zip</image_uri>
+        <uri>GMINL - 208</uri>
+        <image_md5sum>8524b89a16efbd5add93a559cd5dc05b</image_md5sum>
+        <firmware_uri>http://10.239.93.54:8080/GMIN/factory/gminL100580/L100580_TREKSTOR/trekstor_ifwi.bin</firmware_uri>
+        <firmware_md5sum>4078c552735afb8d07a2f05925665c30</firmware_md5sum>
+        <compare_id/>
+        <testtype/>
+        <develop_phase>PVT</develop_phase>
+		<build_date>none</build_date>
+        <build_name>none</build_name>
+        <build_number>none</build_number>
+		<build_id>none</build_id>
+		<device>none</device>
+        <test_device>ECS GMINL Power Auto</test_device>
+        <result_folder>@CATS_SERVER@_$RECIPE_ID</result_folder>
+        <debug>debug</debug>
+		<test_from>pnpuser</test_from>
+    </Options>
+    <Keywords>
+        <!-->Mapping to [OPTIONS] section in CATS recipe<-->
+	<force_flash>True</force_flash>
+        <!--result_home>HostIP:/Dir1/@CaseID@/Dir2/</result_home-->
+        <result_home>pnp-vm-server2.sh.intel.com:/mnt/vms2-disk2/@CaseID@/chdir2/</result_home>
+	<lkp enable="N">
+        <cifs></cifs>
+        <result_home></result_home>
+	    <job_file></job_file>
+        <notify_lkp></notify_lkp>
+        <http_prefix></http_prefix>
+        <job_file></job_file>
+	</lkp>
+    </Keywords>
+    <Setup>     
+        <!--CMD>Burn image, deal with first boot issues</CMD-->
+        <Process duration="600" enable="Y" monitor="N" name="Image_Flash" round="1" timeout="3600">
+            <!-- CATS required domain start -->
+            <cmd>/home/cats/flash_image.sh @IMAGE_URI@ @IMAGE_MD5SUM@</cmd>
+            <!-- CATS required domain end   -->
+        </Process> 
+        <Process duration="1200" enable="Y" monitor="N" name="Setup_Wizard" round="1" timeout="7200">
+            <!-- CATS required domain start -->
+            <cmd>sleep 300;rm -fr @RETRIEVE_LOG_PATH@/*;cd @CASE_PATH@;python setupWizard.py</cmd>
+            <pre_test/>    
+            <post_test/>  
+            <!-- CATS required domain end   -->
+        </Process>       
+        <Process duration="120" enable="N" monitor="N" name="get_default_volume" round="1" timeout="600">
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python get_default_volume.py</cmd>
+            <!--pre_test>mkdir -p /tmp/lkp/</pre_test-->
+            <post_test/>
+            <!-- CATS required domain end   -->
+        </Process>
+   </Setup>
+   <Teardown> 
+        <!--CMD>TEARDOWN E.x.: scp all result/logs to Metrics<CMD-->
+        <Process duration="60" name="Retrieve_Log" round="" timeout="600">
+            <!-- CATS required domain start -->
+            <cmd>scp -r /home/cats/opt/recipe/$RECIPE_ID/result/ pnp@10.239.97.26:/tmp/@CATS_SERVER@_$RECIPE_ID</cmd>
+            <!--cmd>scp -r /home/cats/opt/recipe/$RECIPE_ID/result/ pnp@pnp.sh.intel.com:/tmp/@CATS_SERVER@_$RECIPE_ID;sudo umount /result</cmd-->
+            <!-- CATS required domain end   -->
+        </Process>
+        <Process duration="60" name="REBOOT_DEVICE" round="" timeout="600">
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python reboot_device.py</cmd>                                                                                   
+            <!-- CATS required domain end   -->
+        </Process>
+		<Process name="FLASH_DEVICE" duration="60" round="" timeout="1800">
+            <!-- CATS required domain start --> 
+        <cmd>/home/cats/image-flash/flash_trekstor.sh $DUT_IP</cmd>
+            <!-- CATS required domain end -->
+        </Process>
+
+
+   </Teardown>
+    
+	 <Feature name="UX_experience#Response_time#Cold_Boot_Time_to_home_screen" type="PnP">
+        <Case name="Cold_Boot_Time_to_home_screen" enable="Y" monitor="N" duration="1800" round="3" timeout="3600">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Cold_Boot_Time_to_home_screen.py</cmd>
+            <pre_test></pre_test>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/UX_experience#Response_time#Cold_Boot_Time_to_home_screen/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+	
+    <Feature name="Power#System#Idle_with_Display_On_No_PSR" type="PnP">
+        <Case name="power_idle_screen_on" enable="Y" monitor="Y" duration="1800" round="3" timeout="7200">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python power_idle_screen_on.py</cmd>
+            <pre_test></pre_test>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#System#Idle_with_Display_On_No_PSR/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Power#Camera#Camera_Preview" type="PnP">
+        <Case name="power_Camera_Preview" enable="Y" monitor="Y" duration="1800" round="3" timeout="7200">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python power_Camera_Preview.py</cmd>
+            <pre_test></pre_test>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#Camera#Camera_Preview/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Power#Camera#Image_Capture_Shot2Shot" type="PnP">
+        <Case name="power_Image_Capture_Shot2Shot" enable="Y" monitor="Y" duration="1800" round="3" timeout="7200">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python power_Image_Capture_Shot2Shot.py</cmd>
+            <pre_test></pre_test>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#Camera#Image_Capture_Shot2Shot/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Power#Camera#Video_Recording_720p" type="PnP">
+        <Case name="power_Video_Recording_720p" enable="Y" monitor="Y" duration="1800" round="3" timeout="7200">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python power_Video_Recording_720p.py</cmd>
+            <pre_test></pre_test>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#Camera#Video_Recording_720p/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Power#Camera#Video_Recording_1080p30" type="PnP">
+        <Case name="power_Video_Recording_1080p30" enable="Y" monitor="Y" duration="1800" round="3" timeout="7200">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python power_Video_Recording_1080p30.py</cmd>
+            <pre_test></pre_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#Camera#Video_Recording_1080p30/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Power#Camera#Video_Conference_WebRTC" type="PnP">
+        <Case name="power_Video_Conference_WebRTC" enable="Y" monitor="Y" duration="1800" round="3" timeout="7200">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python power_Video_Conference_WebRTC.py</cmd>
+            <pre_test></pre_test>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#Camera#Video_Conference_WebRTC/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Power#Audio#Local_MP3_Playback_via_wired_headset" type="PnP">
+        <Case name="power_mp3" enable="N" monitor="Y" duration="1800" round="3" timeout="7200">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python power_mp3.py</cmd>
+            <pre_test></pre_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#Audio#Local_MP3_Playback_via_wired_headset/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Power#Video#Local_Video_Playback_720p" type="PnP">
+        <Case name="power_720p_video_playback" enable="N" monitor="Y" duration="1800" round="3" timeout="7200">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python power_720p_video_playback.py</cmd>
+            <pre_test></pre_test>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#Video#Local_Video_Playback_720p/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Power#Video#Local_Video_Playback_1080p_30fps" type="PnP">
+        <Case name="power_1080p_video_playback" enable="N" monitor="Y" duration="1800" round="3" timeout="7200">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python power_1080p_video_playback.py</cmd>
+            <pre_test></pre_test>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#Video#Local_Video_Playback_1080p_30fps/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="test_env" type="PnP">
+        <Case name="test_env" enable="Y" monitor="Y" duration="60" round="1" timeout="600">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor>
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python browserVersion.py</cmd>
+            <pre_test></pre_test>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/test_env/test_env.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Power#Browser#Browsing_with_Chrome_Browser" type="PnP">
+        <Case name="power_browsing" enable="N" monitor="Y" duration="1800" round="3" timeout="7200">
+            <Monitor path="http://xxx/monitor.conf"></Monitor>
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python power_browsing.py</cmd>
+            <pre_test></pre_test>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#Browser#Browsing_with_Chrome_Browser/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Power#Graphics#Angry_Birds" type="PnP">
+        <Case name="power_Angry_Birds" enable="N" monitor="Y" duration="1800" round="3" timeout="7200">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor>
+            <cmd>cd @CASE_PATH@;python power_Angry_Birds.py</cmd>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#Graphics#Angry_Birds/*</retrieve_log>
+        </Case>
+    </Feature>
+
+    <Feature name="Power#Graphics#Epic_Citadel" type="PnP">
+        <Case name="power_Epic_Citadel" enable="N" monitor="Y" duration="1800" round="3" timeout="7200">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor>
+            <cmd>cd @CASE_PATH@;python power_Epic_Citadel.py</cmd>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#Graphics#Epic_Citadel/*</retrieve_log>
+        </Case>
+    </Feature>
+
+    <Feature name="Power#Video#Video_Streaming_HTML5_720p_WLAN" type="PnP">
+        <Case name="power_video_streaming" enable="N" monitor="Y" duration="2000" round="3" timeout="7200">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor>
+            <cmd>cd @CASE_PATH@;python power_video_streaming.py</cmd>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#Video#Video_Streaming_HTML5_720p_WLAN/*</retrieve_log>
+        </Case>
+    </Feature>
+
+    <Feature name="Power#System#Standby_Flight_Mode" type="PnP">
+        <Case name="power_flightmode" enable="Y" monitor="Y" duration="1800" round="3" timeout="10800">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python power_flightmode.py</cmd>
+            <pre_test></pre_test>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#System#Standby_Flight_Mode/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Power#System#Standby_Flight_Mode_BT_ON" type="PnP">
+        <Case name="power_BT" enable="Y" monitor="Y" duration="1200" round="3" timeout="10800">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python power_BT.py</cmd>
+            <pre_test></pre_test>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#System#Standby_Flight_Mode_BT_ON/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Power#System#Screen_Off_Idle_WIFI_ON" type="PnP">
+        <Case name="power_wifi" enable="N" monitor="Y" duration="1800" round="3" timeout="10800">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor>
+            <cmd>cd @CASE_PATH@;python power_wifi.py</cmd>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#System#Screen_Off_Idle_WIFI_ON/*</retrieve_log>
+        </Case>
+    </Feature>
+
+    <Feature name="Power#System#Active_Idle_WLAN" type="PnP">
+        <Case name="power_all_radio_on" enable="N" monitor="Y" duration="7200" round="3" timeout="10800">
+            <Monitor path="http://xxx/monitor.tgz"></Monitor>
+            <cmd>cd @CASE_PATH@;python power_all_radio_on.py</cmd>
+            <post_test></post_test>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Power#System#Active_Idle_WLAN/*</retrieve_log>
+        </Case>
+    </Feature>
+
+</xml>

@@ -1,0 +1,40 @@
+.ttWarning{
+    background-color:yellow !important;
+}
+.ttDanger{
+    background-color:red !important;
+    color:white !important;
+}
+.mNormal{
+    background-color:green !important;
+    color:white !important;
+}
+.mNormal a{
+    color:white;
+}
+.mDanger{
+    background-color:red !important;
+    color:white !important;
+}
+.mDanger a{
+    color:white;
+}
+.floatMarginSpan{
+    float:right;
+    margin-top:-7px;
+    font-size:10pt;
+    height:20px;
+    background-color:white;
+	color:black;
+}
+.preSpan{
+    font-size:10pt;
+    height:20px;
+    background-color:white;
+	color:black;
+}
+.tHead{
+    text-align:center;
+    vertical-align:middle;
+    font-size:14pt;
+}

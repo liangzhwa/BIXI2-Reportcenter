@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>LKP Server</title>
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/ui-lightness/jquery-ui-1.10.4.custom.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/customer.css" />
+    
+    <script type="text/javascript"  src='/static/lib/js/jquery-1.9.1.min.js'></script>
+    <script type="text/javascript" src='/static/lib/js/jquery-ui-1.10.4.custom.min.js'></script>
+    <script type="text/javascript"  src='/static/lib/js/bootstrap.min.js'></script>
+    <script type="text/javascript" src='/static/js/importresult.js'></script>
+</head>
+<body style="background-color:#E5E5E5">
+<div class="navbar navbar-inverse navbar-fixed-top" style="width:100%;background-color:#003D79;background-image:none;">
+    <div class="container" style="width:100%; text-align:center; font-size:20pt; color:white;">
+            PnP KPI Regression Control Report <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--- Import Test Result
+    </div>
+</div>
+<div class="row" style="width:90%;margin-top:78px;margin-left:5%;background-color:#F0FFFF;">
+    <table class="table">
+        <tr><td style="width:150px;">Device</td><td colspan=3><select id="sltDevice" style="width:200px;height:26px;"></select></td></tr>
+        <tr><td>Release Type</td><td style="width:200px;"><select id="sltReleaseType" style="width:200px;height:26px;" onchange="FilterMainRelease(this)"></select></td>
+            <td style="text-align:right;width:100px;">Release</td><td><select id="sltRelease" style="width:200px;height:26px;"></select><button class="btn btn-xs" style="margin-left:10px;" onclick="AddNewRelease()">Add New Release</button></td></tr>
+        <tr><td>Job ID</td><td colspan=3><input id="jobid" type="text" style="width:200px;"></input></td></tr>
+        <tr><td colspan=4><button class="btn btn-sm" style="margin-left:50px;" onclick="GetTestData()">Load From Log Server</button><button class="btn btn-sm" style="margin-left:50px;" onclick="SaveToDB()">Save To DB</button></td></tr>
+        <tr><td colspan=4>
+            <table class="table table-bordered table-striped" id="">
+                <tr><th style="width:30px;"><input type="checkbox" onclick="checkall(this)"/></th><th>JobID</th><th>KPI</th><th>Score</th><th>Remark</th></tr>
+                <tbody id="tbTestData"> </tbody>
+            </table>
+        </td></tr>
+    </table>
+</div>
+
+<div id="newrelease" title="Add New Release" style="display:none;" class="ui-widget ui-widget-content ui-corner-all">
+    <table class="table">
+        <tr>
+            <td><label class="required">Name:</label></td>
+            <td><input class="vTextField" id="name_n" maxlength="100" name="name" type="text"></td>
+        </tr>
+		<tr>
+            <td><label class="required">Releasetype:</label></td>
+            <td><select id="sltReleaseType_n" onchange="FilterRelease(this)"></select></td>
+        </tr>
+        <tr>
+            <td><label>Pre:</label></td>
+            <td><select id="sltRelease_n"></select></td>
+        </tr>        
+        <tr>
+            <td><label for="id_releasedate">Releasedate:</label></td>                     
+            <td><input id="releasedate_n" size="10" type="text" /></td>
+        </tr>
+        <tr>  
+            <td><label for="id_remark">Pull Request:</label></td>
+            <td><!--textarea cols="40" id="pullrequest_n" rows="1"></textarea-->
+                <table>
+                    <tr><th >name</th><th>preintegration</th><th>remark</th><th style="text-align:right;"><button onclick="AddNewRow(this)">Add</button></th></tr>
+                    <tbody id="pullrequest_n">
+                    <tr><td ><input style="width:150px;" /></td><td><input style="width:150px;"/></td><td colspan=2><input style="width:150px;"/></td></tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>  
+            <td><label for="id_remark">Remark:</label></td>
+            <td><textarea cols="40" id="remark_n" rows="3"></textarea></td>
+        </tr>
+        <tr class="submit-row">
+            <td colspan=2 style="text-align:right;"><button class="btn btn-info btn-sm" style="width:100px;" onclick="SaveRelease()">Save</button><button class="btn btn-info btn-sm" style="width:100px;margin-left:10px;" onclick="CloseReleaseWindow()">Cancel</button></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

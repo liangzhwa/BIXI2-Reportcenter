@@ -1,0 +1,84 @@
+#!/bin/bash
+#
+# Fetch job from Web Portal and Feed to TestBot
+#
+
+release_no=$1
+device_name=$2
+release_id=$3
+folder_pull_requests="./logs/$release_no""_PullRequests"
+folder_jira_json="./log_jira_json"
+log_xml4testbot="$folder_pull_requests/preInt_xml4testbot.log"
+log_recipe_pnp="$folder_pull_requests/preInt_recipe_pnp.log"
+user_name=`head -1 ./settings/user_info.txt`
+pass_word=`tail -1 ./settings/user_info.txt`
+save_files_to=`head -1 ./settings/image_config.txt`
+echo "bisect info: $release_no $device_name"
+date +%Y-%m-%d-%H:%M:%S
+
+case $device_name in
+"TREKSTOR" | "CLOUDFONE")
+	#echo "COHO is selected"
+	image_folder="coho";;
+"ECS27B" | "ECS210A" | "ECS28A" | "CHIPHD8" | "MALATA8")
+	#echo "COHOL is selected"
+	image_folder="cohol";;
+*) 
+	echo "ERROR!!! no such deivces"
+	exit 1;;
+esac
+
+python ./bin/get_PullRequest_List_from_WIKI.py $release_no
+#cat "$release_no""_PullRequest_List.info"
+cat "$folder_pull_requests/$release_no""_PullRequest_List.info"
+#cat "$release_no""_PullRequest_List.info" | awk '{print $1}' 
+if [ ! -d $folder_pull_requests ];then
+	mkdir $folder_pull_requests
+fi
+
+if [ ! -d $folder_jira_json ];then
+	mkdir $folder_jira_json
+fi
+if [ -f "$folder_pull_requests/preInt.list" ];then
+	rm "$folder_pull_requests/preInt.list"
+fi
+cat "$folder_pull_requests/$release_no""_PullRequest_List.info" | awk '{print $1}' | while pull_request_no=$(line)
+do
+	echo "$pull_request_no"
+	curl -u zliangx:lzw,123,9 -X GET -H "Content-Type: application/json"  https://jira01.devtools.intel.com/rest/api/2/issue/$pull_request_no/comment? --insecure>$folder_jira_json/$pull_request_no.json
+	
+    python ./bin/get_preIntBuild_from_JSON.py ${pull_request_no#GMINL-} $folder_jira_json>"$folder_pull_requests/$pull_request_no"
+	pre_int_no=`cat $folder_pull_requests/$pull_request_no | cut -d "/" -f8`
+	echo "pull_request_no=$pull_request_no*****pre_int_no=$pre_int_no*****"
+	if [ -z "$pre_int_no" ];then
+		echo "$pull_request_no NONE">>"$folder_pull_requests/preInt.list"
+	else
+		echo "$pull_request_no $pre_int_no">>"$folder_pull_requests/plog_xml4testbotreInt.list"
+		bash ./bin/download_pre_int_img.sh $pre_int_no $device_name
+		#task_id="3"
+		#python ./bin/gen_xml4testbot_preInt.py $release_no $pre_int_no $device_name $task_id $log_xml4testbot
+	fi
+done
+python ./bin/gen_preIntPullRequest_record.py $folder_pull_requests/plog_xml4testbotreInt.list $device_name $image_folder $release_id $save_files_to
+
+exit
+
+
+
+
+
+cat $log_xml4testbot | sort | uniq > $folder_pull_requests/bisect_$release_no.list
+echo "feeding PnP xml to TestBot"
+exit
+echo "LINE:"$myline
+cat $folder_pull_requests/bisect_$release_no.list | while myline=$(line)
+do
+	recipe_id=`python ./bin/ats.py -t $myline | grep recipe_id | awk '{print $3}'`
+	if [ "$recipe_id" == "" ];then 
+		echo "ERROR: can not start testbot!!! $myline"
+		echo "$myline NONE" >> $log_recipe_pnp
+	else
+		echo "Testbot start success $myline recipe_id = $recipe_id"
+		echo "$myline $recipe_id" >> $log_recipe_pnp
+	fi
+done

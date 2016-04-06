@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>LKP Server</title>
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/ui-lightness/jquery-ui-1.10.4.custom.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/customer.css" />
+    
+    <script type="text/javascript"  src='/static/lib/js/jquery-1.9.1.min.js'></script>
+    <script type="text/javascript" src='/static/lib/js/jquery-ui-1.10.4.custom.min.js'></script>
+    <script type="text/javascript"  src='/static/lib/js/bootstrap.min.js'></script>
+    <script type="text/javascript" src='/static/js/kpimanager.js'></script>
+</head>
+<body style="background-color:#E5E5E5">
+<div class="navbar navbar-inverse navbar-fixed-top" style="width:100%;background-color:#003D79;background-image:none;">
+    <div class="container" style="width:100%; text-align:center; font-size:20pt; color:white;">
+            PnP KPI Regression Control Report <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--- KPI Manage
+    </div>
+</div>
+<div class="row" style="width:90%;margin-top:78px;margin-left:5%;background-color:#F0FFFF;">
+    <div class="col-lg-10"><p style="font-size:16pt;font-weight:bolder;margin-top:5px;">KPI List</p></div>
+    <div class="col-lg-2">
+        <button class="btn btn-xl" style="margin:5px;" onclick="AddNewKpi()">Add New KPI</button>
+    </div>
+</div>
+<div class="row" style="width:90%;margin-left:5%;background-color:#F0FFFF;">
+    <hr style="background-image:-webkit-linear-gradient(45deg,#8ca9cf,#F0FFFF);height:3px;width:20%;margin-top:-2px;margin-bottom:10px;" align="left" color="#987cb9" size="3">
+</div>
+<div class="row" style="width:90%;margin-left:5%;background-color:#F0FFFF;">
+    <table class="table"><tr><th>KPI Type</th><th>Show Name</th><th>Unit</th><th>Priority</th><th>Key</th><th>Summary</th><th>Remark</th><th></th></tr><tbody id="kpilist"></tbody></table>
+</div>
+<div id="newkpi" title="Add New KPI"  style="display:none;" class="ui-widget ui-widget-content ui-corner-all">
+    <table class="table">
+        <tr><td style="width:120px;text-align:right;">KPI Type</td><td ><select id="k_sltKpitype" style="width:400px;height:26px;"></select></td></tr>
+        <tr><td style="text-align:right;">Test Case Name</td><td ><input id="k_testcasename" style="width:400px;height:26px;" onblur="GetShowName(this)"/></td></tr>
+        <tr><td style="text-align:right;">Show Name</td><td ><input id="k_showname" style="width:400px;height:26px;"/></td></tr>
+        <tr><td style="text-align:right;">Unit</td><td style="width:200px;"><select id="k_sltUnit" style="width:200px;height:26px;" onchange="SetLargeisbetter(this)"></select><label style="margin-left:10px;"><input id="k_largeisbetter" type="checkbox"/>Large Is Better?</label></td></tr>
+        <tr><td style="text-align:right;">Priority</td><td ><select id="k_sltPriority" style="width:400px;height:26px;"></select></td></tr>
+        <tr><td style="text-align:right;">Key</td><td ><input id="k_key" style="width:400px;height:26px;"/></td></tr>
+        <tr><td style="text-align:right;">Summary</td><td ><input id="k_summary" style="width:400px;height:26px;"/></td></tr>
+        <tr><td style="text-align:right;">Remark</td><td ><textarea id="k_remark" style="width:400px;"></textarea></td></tr>
+        <tr class="submit-row">
+            <td colspan=2 style="text-align:right;"><button class="btn btn-info btn-xs" style="width:60px;" onclick="SaveKpi()">Save</button><button class="btn btn-info btn-xs" style="width:60px;margin-left:10px;" onclick="CloseKpiWindow()">Cancel</button></td>
+        </tr>
+    </table>
+</div>
+<div id="newkpitype" title="Add New KPI Type" style="display:none;" class="ui-widget ui-widget-content ui-corner-all">
+    <table class="table">
+        <tr>
+            <td><label class="required">Name:</label></td>
+            <td><input class="vTextField" id="p_name" maxlength="100" name="name" type="text"></td>
+        </tr>
+        <tr class="submit-row">
+            <td colspan=2 style="text-align:right;"><button class="btn btn-info btn-xs" style="width:60px;" onclick="SaveKpiType()">Save</button><button class="btn btn-info btn-xs" style="width:60px;margin-left:10px;" onclick="CloseKpiTypeWindow()">Cancel</button></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

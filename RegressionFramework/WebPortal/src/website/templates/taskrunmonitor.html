@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>LKP Server</title>
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/ui-lightness/jquery-ui-1.10.4.custom.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/customer.css" />
+    
+    <script type="text/javascript"  src='/static/lib/js/jquery-1.9.1.min.js'></script>
+    <script type="text/javascript" src='/static/lib/js/jquery-ui-1.10.4.custom.min.js'></script>
+    <script type="text/javascript"  src='/static/lib/js/bootstrap.min.js'></script>
+    <script type="text/javascript" src='/static/js/taskrunmonitor.js'></script>
+</head>
+<body style="background-color:#E5E5E5">
+<div class="navbar navbar-inverse navbar-fixed-top" style="width:100%;background-color:#778899;background-image:none;">
+    <div class="container" style="width:100%; text-align:center; font-size:20pt; color:white;">
+            PnP KPI Regression Control Report  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--- Task Run History
+    </div>
+    <div class="row" style="width:100%;padding-left:8%;">
+        <ul class="nav nav-pills" style="background-color:#778899;">
+            <li role="presentation" class="dropdown">
+                <a class="dropdown-toggle" style="color:white;" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">BaseInfo<span class="caret" style="border-top-color:white;"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a target="_blank" href="http://10.239.93.157:9900/devicemanager">Device</a></li>
+                    <li><a target="_blank" href="http://10.239.93.157:9900/deployeddevicemanager">Deployed Device</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a target="_blank" href="http://10.239.93.157:9900/releasetypemanager">Release Type</a></li>
+                    <li><a target="_blank" href="http://10.239.93.157:9900/releasemanager">Release</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a target="_blank" href="http://10.239.93.157:9900/domainmanager">Domain</a></li>
+                    <li><a target="_blank" href="http://10.239.93.157:9900/kpimanager">KPI</a></li>
+                    <li><a target="_blank" href="http://10.239.93.157:9900/kpitargetmanager">KPI Target</a></li>
+                </ul>
+            </li>
+            <li role="presentation" class="dropdown">
+                <a class="dropdown-toggle" style="color:white;" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Monitor<span class="caret" style="border-top-color:white;"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a target="_blank" href="http://10.239.93.157:9900/taskrunmonitor">Plan Task Run</a></li>
+                    <li><a target="_blank" href="http://10.239.93.157:9900/recipemonitormanager">Recipe</a></li>
+                </ul>
+            </li>
+            <li role="presentation" class="dropdown">
+                <a class="dropdown-toggle" style="color:white;" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">View<span class="caret" style="border-top-color:white;"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a target="_blank" href="http://10.239.93.157:9900/kpireleaseview">Device View</a></li>
+                    <li><a target="_blank" href="http://10.239.93.157:9900/kpideviceview">Release View</a></li>
+                    <li><a target="_blank" href="http://10.239.93.157:9900/devicereleaseview">KPI View</a></li>
+                </ul>
+            </li>
+            <li role="presentation" class="dropdown">
+                <a class="dropdown-toggle" style="color:white;" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Plan Task<span class="caret" style="border-top-color:white;"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a target="_blank" href="http://10.239.93.157:9900/pnprolekpimanager">PNP Role KPI</a></li>
+                    <li><a target="_blank" href="http://10.239.93.157:9900/testdataresultmanager">Test Result</a></li>
+                    <li><a target="_blank" href="http://10.239.93.157:9900/importresult">Import Test Result</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="row" style="width:90%;margin-top:78px;margin-left:5%;background-color:#F0FFFF;">
+    <div class="col-lg-10">
+        <label id="title" style="font-size:16pt;font-weight:bolder;margin-top:5px;">Task Run History:</label>
+        <select id="sltImage" onchange="initTaskRunList()"></select>
+        <select id="sltDevice" onchange="initTaskRunList()"></select>
+        <label style="margin-left:20px;"><input type="radio" name="rgFilter" value="-1" id="rgFilter" checked onclick="initTaskRunList()">All</label>
+        <label style="margin-left:5px;"><input type="radio" name="rgFilter" value="2" id="rgFilter_0" onclick="initTaskRunList()">Running</label>
+        <label style="margin-left:5px;"><input type="radio" name="rgFilter" value="1" id="rgFilter_1" onclick="initTaskRunList()">Waiting</label>
+        <label style="margin-left:5px;"><input type="radio" name="rgFilter" value="4" id="rgFilter_2" onclick="initTaskRunList()">Finished</label>
+        <label style="margin-left:5px;"><input type="radio" name="rgFilter" value="3" id="rgFilter_3" onclick="initTaskRunList()">Failed</label>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+<div class="row" style="width:90%;margin-left:5%;background-color:#F0FFFF;">
+    <hr style="background-image:-webkit-linear-gradient(45deg,#8ca9cf,#F0FFFF);height:3px;width:20%;margin-top:-2px;margin-bottom:10px;" align="left" color="#987cb9" size="3">
+</div>
+<div class="row" style="width:90%;margin-left:5%;background-color:#F0FFFF;">
+    <table class="table table-striped"><tr class="prettyHead"><th>Image</th><th>Device</th><th>PnP Role</th><th>Deployed</th><th>Job ID</th><th>Status</th></tr><tbody id="taskrunlist"></tbody></table>
+</div>
+</body>
+</html>

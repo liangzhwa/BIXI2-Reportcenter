@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?><xml>
+    <!-->Mapping to [DEVICE] secion in CATS recipe<-->
+    <Device>
+        <ip>build22.sh.intel.com</ip>
+        <serial>8E2E0143</serial>
+    </Device>
+    <Options>
+        <email>pnp@pnp.sh.intel.com;xiaoye.sun@intel.com</email>
+        <receiver/>
+        <conditional_exit>Image_Flash</conditional_exit>
+        <env/>
+        <executor>def_executor</executor>
+        <case_path>/home/pnp/pnp_auto</case_path>
+        <retrieve_log_path>/home/cats/t100/\$DUT_IP</retrieve_log_path>
+        <image_uri>http://sxy-precision-t1700.sh.intel.com:8080/preInt_build/coho-flashfiles-TREKSTOR-llp_mr1_r1-prei-69.zip</image_uri>
+        <uri>none</uri>
+        <image_md5sum>c7129d82c373ceac06d7b262da5171c8</image_md5sum>
+        <firmware_uri>http://chuzhul-ubuntu.sh.intel.com:8080/GMIN/factory/gminL100790/L100790_TREKSTOR/trekstor_ifwi.bin</firmware_uri>
+        <firmware_md5sum>4078c552735afb8d07a2f05925665c30</firmware_md5sum>
+        <testtype/>
+        <develop_phase>PVT</develop_phase>
+        <build_date>none</build_date>
+        <build_name>coho-flashfiles-TREKSTOR-llp_mr1_r1-prei-69.zip</build_name>
+        <build_number>69</build_number>
+        <compare_build/>
+        <result_folder>@CATS_SERVER@_$RECIPE_ID</result_folder>
+        <debug>debug</debug>
+        <project>IRDA</project>
+        <distro>GMIN L</distro>
+        <device>TREKSTOR</device>
+		<test_from>pnpuser</test_from>
+    </Options>
+    <Keywords>
+        <!-->Mapping to [OPTIONS] section in CATS recipe<-->
+	<force_flash>yes</force_flash>
+        <!--result_home>HostIP:/Dir1/@CaseID@/Dir2/</result_home-->
+        <result_home>pnp-vm-server2.sh.intel.com:/mnt/vms2-disk2/@CaseID@/chdir2/</result_home>
+	<lkp enable="N">
+        <cifs>&quot;mount.cifs -o guest //bee.sh.intel.com/result-for-TestBot /testbot_result&quot;</cifs>
+        <result_home>DeviceSN/android-performance/Feature/android-system/x86_64-irda/kernel_a6e9561df83b14eae90d54651cb310efbac051d2/</result_home>
+	    <job_file>/lkp/scheduled/lkp-sbx04/cyclic_will-it-scale-performance-futex4-x86_64-rhel-HEAD-7866021017c6ce87ab3677850eb8b06c404e2a10-0.yaml</job_file>
+        <notify_lkp>http:/166.166.166.166/xxx.cgi</notify_lkp>
+        <http_prefix>http:/xxx</http_prefix>
+        <job_file>http:/xxxxxaaa</job_file>
+	</lkp>
+    </Keywords>
+    <Setup>     
+        <!--CMD>Burn image, deal with first boot issues</CMD-->
+        <Process duration="600" enable="Y" monitor="N" name="Image_Flash" round="1" timeout="3600">
+            <!-- CATS required domain start -->
+            <cmd>/opt/flash_image.sh @IMAGE_URI@ @IMAGE_MD5SUM@</cmd>
+            <!-- CATS required domain end   -->
+        </Process> 
+        <Process duration="120" enable="Y" monitor="N" name="Setup_Wizard" round="1" timeout="5000">
+            <!-- CATS required domain start -->
+            <cmd>rm -rf /home/cats/t100/\$DUT_IP;sleep 600;cd @CASE_PATH@;python setupWizard.py</cmd>
+            <pre_test/>    
+            <post_test/>  
+            <!-- CATS required domain end   -->
+        </Process>       
+        <Process duration="120" enable="N" monitor="N" name="Mount_LKP" round="1" timeout="1800">
+            <!-- CATS required domain start -->
+            <!--cmd>sudo mkdir -p /testbot_result ;if [ $lkp = 'Y' ] ;then sudo $cifs; fi</cmd-->
+            <!--pre_test>mkdir -p /tmp/lkp/</pre_test-->    
+            <post_test/>  
+            <!-- CATS required domain end   -->
+        </Process>       
+   </Setup>
+   <Teardown> 
+        <Process duration="60" enable="Y" monitor="Y" name="test_env" round="1" timeout="600">
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python browserVersion.py</cmd>
+            <pre_test/>
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/test_env/test_env.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Process>
+
+        <!--CMD>TEARDOWN E.x.: scp all result/logs to Metrics<CMD-->
+        <Process duration="60" name="Retrieve_Log" round="" timeout="600">
+            <!-- CATS required domain start -->
+            <!--cmd>scp -r /home/cats/t100/$DUT_IP/ pnp@pnp.sh.intel.com:/tmp/@CATS_SERVER@_$RECIPE_ID</cmd-->
+            <cmd>cat @RETRIEVE_LOG_PATH@/*/*.log &gt;&gt; /home/cats/opt/recipe/$RECIPE_ID/result/automation_performace.log;scp -r /home/cats/opt/recipe/$RECIPE_ID/result/ pnp@10.239.97.26:/tmp/@CATS_SERVER@_$RECIPE_ID;sudo umount /testbot_result</cmd>
+            <!-- CATS required domain end   -->
+        </Process> 
+        <Process duration="60" name="Notify_LKP" round="" timeout="600">
+            <!-- CATS required domain start -->
+            <cmd>wget --no-proxy $notify_lkp</cmd>
+            <!-- CATS required domain end   -->
+        </Process> 
+        <Process duration="60" name="REBOOT_DEVICE" round="" timeout="600">
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python reboot_device.py</cmd>                                                                                                                                              <!-- CATS required domain end   -->
+        </Process> 
+
+   </Teardown>
+ 
+    <Feature name="UX_experience#Response_time#Browser_Application_Launch_Time_Cold" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="Browser_Application_Launch_Time_Cold" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+	    <lkp_yaml path="http://xxx/job.yaml"/>
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Browser_Application_Launch_Time_Cold.py</cmd>
+            <pre_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/UX_experience#Response_time#Browser_Application_Launch_Time_Cold/UX_experience#Response_time#Browser_Application_Launch_Time_Cold.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="UX_experience#Response_time#Contacts_Application_Launch_Time" type="PnP">
+        <Case duration="120" enable="Y" monitor="N" name="Contacts_Application_Launch_Time" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Contacts_Application_Launch_Time.py</cmd>
+            <pre_test/>    
+            <retrieve_log>@RETRIEVE_LOG_PATH@/UX_experience#Response_time#Contacts_Application_Launch_Time/UX_experience#Response_time#Contacts_Application_Launch_Time.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="UX_experience#Response_time#Settings_Application_Launch_Time" type="PnP">
+        <Case duration="120" enable="Y" monitor="N" name="Settings_Application_Launch_Time" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Settings_Application_Launch_Time.py</cmd>
+            <pre_test/>    
+            <retrieve_log>@RETRIEVE_LOG_PATH@/UX_experience#Response_time#Settings_Application_Launch_Time/UX_experience#Response_time#Settings_Application_Launch_Time.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="UX_experience#Response_time#Camera_Shot2Shot_with_Max_resolution" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="Camera_Shot2Shot_with_Max_resolution.py" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Camera_Shot2Shot_with_Max_resolution.py</cmd>
+            <pre_test/>
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/UX_experience#Response_time#Camera_Shot2Shot_with_Max_resolution/UX_experience#Response_time#Camera_Shot2Shot_with_Max_resolution.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="UX_experience#Response_time#Camera_launch_to_preview_Cold" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="Camera_launch_to_preview_Cold" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Camera_launch_to_preview_Cold.py</cmd>
+            <pre_test/>
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/UX_experience#Response_time#Camera_launch_to_preview_Cold/UX_experience#Response_time#Camera_launch_to_preview_Cold.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="UX_experience#Smoothness#H264_video_record_720p" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="H264_video_record_720p" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python H264_video_record_720p.py</cmd>
+            <pre_test/>
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/UX_experience#Smoothness#H264_video_record_720p/UX_experience#Smoothness#H264_video_record_720p.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="UX_experience#Smoothness#Flinging_image_list_in_Gallery" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="Flinging_image_list_in_Gallery" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Flinging_image_list_in_Gallery.py</cmd>
+            <pre_test/>    
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/UX_experience#Smoothness#Flinging_image_list_in_Gallery/UX_experience#Smoothness#Flinging_image_list_in_Gallery.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+    
+    <Feature name="UX_experience#Smoothness#Flinging_home_screen_panels" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="Flinging_home_screen_panels" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Flinging_home_screen_panels.py</cmd>
+            <pre_test/>    
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/UX_experience#Smoothness#Flinging_home_screen_panels/UX_experience#Smoothness#Flinging_home_screen_panels.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="UX_experience#Smoothness#Frame_rate_of_webpage_scrolling" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="Frame_rate_of_webpage_scrolling" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Frame_rate_of_webpage_scrolling.py</cmd>
+            <pre_test/>    
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/UX_experience#Smoothness#Frame_rate_of_webpage_scrolling/UX_experience#Smoothness#Frame_rate_of_webpage_scrolling.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="UX_experience#Smoothness#Games_Angry_Birds_Star_Wars" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="Games_Angry_Birds_Star_Wars" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Games_Angry_Birds_Star_Wars.py</cmd>
+            <pre_test/>    
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/UX_experience#Smoothness#Games_Angry_Birds_Star_Wars/UX_experience#Smoothness#Games_Angry_Birds_Star_Wars.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Video#Local_video#Playing_H.264_AVC_High_profile_video" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="Playing_H.264_AVC_High_profile_video" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Playing_H.264_AVC_High_profile_video.py</cmd>
+            <pre_test/>    
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Video#Local_video#Playing_H.264_AVC_High_profile_video/Video#Local_video#Playing_H.264_AVC_High_profile_video.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Video#Local_video#Playing_H.264_AVC_Main_profile_video" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="Playing_H.264_AVC_Main_profile_video" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Playing_H.264_AVC_Main_profile_video.py</cmd>
+            <pre_test/>    
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Video#Local_video#Playing_H.264_AVC_Main_profile_video/Video#Local_video#Playing_H.264_AVC_Main_profile_video.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#System#AnTuTu_Total" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="AnTuTu" round="3" timeout="9000">
+            <Monitor path="http://xxx/monitor.conf"/>
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python AnTuTu.py --sub &quot;Benchmark#System#AnTuTu_Total&quot;</cmd>
+            <pre_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#System#AnTuTu_Total/Benchmark#System#AnTuTu_Total.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#System#AnTuTu_Multitask" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="AnTuTu" round="3" timeout="9000">
+            <cmd>cd @CASE_PATH@;python AnTuTu.py --sub &quot;Benchmark#System#AnTuTu_Multitask&quot;</cmd>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#System#AnTuTu_Multitask/Benchmark#System#AnTuTu_Multitask.log</retrieve_log>
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#System#AnTuTu_Dalvik" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="AnTuTu" round="3" timeout="9000">
+            <cmd>cd @CASE_PATH@;python AnTuTu.py --sub &quot;Benchmark#System#AnTuTu_Dalvik&quot;</cmd>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#System#AnTuTu_Dalvik/Benchmark#System#AnTuTu_Dalvik.log</retrieve_log>
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#System#AnTuTu_CPU_int" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="AnTuTu" round="3" timeout="9000">
+            <cmd>cd @CASE_PATH@;python AnTuTu.py --sub &quot;Benchmark#System#AnTuTu_CPU_int&quot;</cmd>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#System#AnTuTu_CPU_int/Benchmark#System#AnTuTu_CPU_int.log</retrieve_log>
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#Graphics#AnTuTu_3D" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="AnTuTu" round="3" timeout="9000">
+            <cmd>cd @CASE_PATH@;python AnTuTu.py --sub &quot;Benchmark#Graphics#AnTuTu_3D&quot;</cmd>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#Graphics#AnTuTu_3D/Benchmark#Graphics#AnTuTu_3D.log</retrieve_log>
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#System#AnTuTu_CPU_Float" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="AnTuTu" round="3" timeout="9000">
+            <cmd>cd @CASE_PATH@;python AnTuTu.py --sub &quot;Benchmark#System#AnTuTu_CPU_Float&quot;</cmd>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#System#AnTuTu_CPU_Float/Benchmark#System#AnTuTu_CPU_Float.log</retrieve_log>
+        </Case>
+    </Feature>
+    <Feature name="Benchmark#System#AnTuTu_RAM" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="AnTuTu" round="3" timeout="9000">
+            <cmd>cd @CASE_PATH@;python AnTuTu.py --sub &quot;Benchmark#System#AnTuTu_RAM&quot;</cmd>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#System#AnTuTu_RAM/Benchmark#System#AnTuTu_RAM.log</retrieve_log>
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#System#AnTuTu_RAM_Speed" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="AnTuTu" round="3" timeout="9000">
+            <cmd>cd @CASE_PATH@;python AnTuTu.py --sub &quot;Benchmark#System#AnTuTu_RAM_Speed&quot;</cmd>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#System#AnTuTu_RAM_Speed/Benchmark#System#AnTuTu_RAM_Speed.log</retrieve_log>
+        </Case>
+    </Feature>
+    <Feature name="Benchmark#System#AnTuTu_IO_Storage" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="AnTuTu" round="3" timeout="9000">
+            <cmd>cd @CASE_PATH@;python AnTuTu.py --sub &quot;Benchmark#System#AnTuTu_IO_Storage&quot;</cmd>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#System#AnTuTu_IO_Storage/Benchmark#System#AnTuTu_IO_Storage.log</retrieve_log>
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#System#AnTuTu_IO_Database" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="AnTuTu" round="3" timeout="9000">
+            <cmd>cd @CASE_PATH@;python AnTuTu.py --sub &quot;Benchmark#System#AnTuTu_IO_Database&quot;</cmd>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#System#AnTuTu_IO_Database/Benchmark#System#AnTuTu_IO_Database.log</retrieve_log>
+        </Case>
+    </Feature>   
+ 
+    <Feature name="Benchmark#Graphics#Epic_Citadel_High_Performance" type="PnP">
+        <Case duration="300" enable="N" monitor="N" name="Epic_Citadel_High_Performance" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Epic_Citadel_High_Performance.py</cmd>
+            <pre_test/>    
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#Graphics#Epic_Citadel_High_Performance/Benchmark#Graphics#Epic_Citadel_High_Performance.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#Graphics#3DMark_Android_1.0.1_IceStorm" type="PnP">
+        <Case duration="300" enable="N" monitor="N" name="3DMark_Android_1.0.1_IceStorm" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python 3DMark_Android_1.0.1_IceStorm.py</cmd>
+            <pre_test/>    
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#Graphics#3DMark_Android_1.0.1_IceStorm/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#Graphics#GLBenchmark2.7_T_Rex_HD_OffScreen" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="GLBenchmark2.7_T_Rex_HD_OffScreen" round="3" timeout="3600">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python GLBenchmark2.7_T_Rex_HD_OffScreen.py</cmd>
+            <pre_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#Graphics#GLBenchmark2.7_T_Rex_HD_OffScreen/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#System#MobileXprt_UX_Total" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="MobileXPRT" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python MobileXPRT.py</cmd>
+            <pre_test/>
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#System#MobileXprt_UX_Total/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#System#MobileXprt_Perf_Total" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="MobileXPRT" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <!--cmd>cd @CASE_PATH@;python MobileXPRT.py</cmd-->
+            <pre_test/>
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#System#MobileXprt_Perf_Total/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+
+    <Feature name="Benchmark#Graphics#RenderScript_Performance" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="RenderScript_Performance" round="3" timeout="3600">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python RenderScript_Performance.py</cmd>
+            <pre_test/>
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#Graphics#RenderScript_Performance/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#Browser#Octane" type="PnP">
+        <Case duration="300" enable="N" monitor="N" name="Octane" round="3" timeout="3600">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Octane.py</cmd>
+            <pre_test/>
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#Browser#Octane/Benchmark#Browser#Octane.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Video#WebRTC#WebRTC_performance" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="WebRTC_performance" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python WebRTC_performance.py</cmd>
+            <pre_test/>
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Video#WebRTC#WebRTC_performance/Video#WebRTC#WebRTC_performance.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="UX_experience#Response_time#Button_Click_to_Audio_Input" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="Button_Click_to_Audio_Input" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@; python Button_Click_to_Audio.py</cmd>
+            <pre_test/>
+            <post_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/UX_experience#Response_time#Button_Click_to_Audio_Input/UX_experience#Response_time#Button_Click_to_Audio_Input.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="UX_experience#Response_time#Button_Click_to_Audio_Output" type="PnP">
+        <Case duration="120" enable="N" monitor="N" name="Button_Click_to_Audio_Output" round="3" timeout="7200">
+            <!--Monitor path="http://xxx/monitor.tgz"></Monitor--> <!--monitor.sh-->
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@; python Button_Click_to_Audio.py</cmd>
+            <pre_test/>
+            <post_test/>          
+            <retrieve_log>@RETRIEVE_LOG_PATH@/UX_experience#Response_time#Button_Click_to_Audio_Output/UX_experience#Response_time#Button_Click_to_Audio_Output.log</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#Storage#Random_Read" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="Android-JIO_v1.7" round="3" timeout="9000">
+            <!-- CATS required domain start -->
+            <cmd>cd @CASE_PATH@;python Android-JIO_v1.7.py</cmd>
+            <pre_test/>
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#Storage#Random_Read/*</retrieve_log>
+            <!-- CATS required domain end   -->
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#Storage#Random_Write" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="Android-JIO_v1.7" round="3" timeout="9000">
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#Storage#Random_Write/*</retrieve_log>
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#Storage#Sequential_Read" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="Android-JIO_v1.7" round="3" timeout="9000">
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#Storage#Sequential_Read/*</retrieve_log>
+        </Case>
+    </Feature>
+
+    <Feature name="Benchmark#Storage#Sequential_Write" type="PnP">
+        <Case duration="600" enable="N" monitor="N" name="Android-JIO_v1.7" round="3" timeout="9000">
+            <retrieve_log>@RETRIEVE_LOG_PATH@/Benchmark#Storage#Sequential_Write/*</retrieve_log>
+        </Case>
+    </Feature>
+
+</xml>

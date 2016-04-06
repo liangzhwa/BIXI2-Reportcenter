@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?><xml>
+<task id='1' test_set='performance'>
+    <device name='TREKSTOR'>build22.sh.intel.com:8E2E0143</device>
+    <KPI data_rsd='10.00'>Benchmark#Graphics#AnTuTu_3D</KPI>
+    <KPI data_rsd='10.00'>UX_experience#Response_time#Camera_launch_to_preview_Cold</KPI>
+</task>
+</xml>
